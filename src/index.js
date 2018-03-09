@@ -82,18 +82,34 @@ class Game extends React.Component {
     });
   }
 
+  getCoord(squares) {
+    for (let i = 0; i < squares; i++) {
+      if (squares[i] !== this.state.history[this.state.stepNumber - 1].squares) {
+        return i;
+      }
+    }
+  }
+
   render() {
     const history = this.state.history;
     const current = history[this.state.stepNumber];
     const winner = calculateWinner(current.squares);
+    const stepNumber = this.state.stepNumber
 
     const moves = history.map((step, move) => {
       const desc = move ?
         'Go to move #' + move :
         'Go to game start';
 
+      console.log(history)
       if (move) {
-        let coord = step.filter(x => !history[this.state.stepNumber - 1].includes(x));
+        // let coord = step.squares.filter(mark => !history[stepNumber - 1].squares.includes(mark));
+        // let coord = step.squares.some(function(mark, index) {
+        //   if (!history[stepNumber - 1].squares.includes(mark)) {
+        //     return index;
+        //   }
+        let coord = this.getCoord(step.squares);
+        // }); 
       }
 
       
