@@ -82,43 +82,59 @@ class Game extends React.Component {
     });
   }
 
-  getCoord(squares) {
-    for (let i = 0; i < squares; i++) {
-      if (squares[i] !== this.state.history[this.state.stepNumber - 1].squares) {
-        return i;
+  getCoord(squares, move) {
+    for (let i = 0; i < squares.length; i++) {
+      if (squares[i] !== this.state.history[move - 1].squares[i]) {
+        var mark = squares[i];
+        var row = Math.floor(i / 3) + 1;
+        var col = i % 3 + 1;
+        return mark + " at " + row + ":" + col;
       }
     }
+    return "";
   }
 
   render() {
     const history = this.state.history;
     const current = history[this.state.stepNumber];
     const winner = calculateWinner(current.squares);
-    const stepNumber = this.state.stepNumber
+    const stepNumber = this.state.stepNumber;
+    let coord;
+    let currentMove;
 
     const moves = history.map((step, move) => {
       const desc = move ?
         'Go to move #' + move :
         'Go to game start';
+        if (move) {
+          coord = this.getCoord(step.squares, move);
+        }
+        else {
+          coord = "";
+        }
 
-      console.log(history)
-      if (move) {
-        // let coord = step.squares.filter(mark => !history[stepNumber - 1].squares.includes(mark));
-        // let coord = step.squares.some(function(mark, index) {
-        //   if (!history[stepNumber - 1].squares.includes(mark)) {
-        //     return index;
-        //   }
-        let coord = this.getCoord(step.squares);
-        // }); 
+      // if (move == stepNumber) {
+      //   currentMove = "bold";
+      // }
+      // else {
+      //   currentMove = "inheret";
+      // }
+
+      const buttonStyle = () => {
+        if (move == stepNumber) {
+          return { fontWeight: 'bold' }
+        }
+        else {
+          return {
+            fontWeight: '100'
+          }
+        }
+
       }
-
-      
-      
-      // console.log(location)
 
       return (
         <li key={move}>
-          <button onClick={() => this.jumpTo(move)}>{desc}</button>
+          <button style={buttonStyle} onClick={() => this.jumpTo(move)}>{desc + " " + coord}</button>
         </li>
       );
     });
